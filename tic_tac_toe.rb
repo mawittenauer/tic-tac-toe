@@ -21,8 +21,10 @@ def make_board
 end
 
 def get_player_choice(b)
-  puts "Select a position (1 - 9):"
-  selection = gets.chomp.to_i
+  begin
+    puts "Select a position (1 - 9):"
+    selection = gets.chomp.to_i
+  end until empty_spaces(b).include?(selection)
   b[selection] = 'X'
 end
 
@@ -34,19 +36,21 @@ def get_computer_choice(b)
   b[empty_spaces(b).sample] = 'O'
 end
 
-def check_for_winner(b)
-  winning_rows = [[1, 2, 3], [4, 5, 6], [7, 8 ,9], [1, 4, 7], [2, 5, 8], [3, 6, 9]]
-  winning_rows.each do |arr|
-    if (b[arr[0]] == "X" && b[arr[1]] == "X" && b[arr[2]] == "X")
-      puts "Congratulations, you Win!"
-      return true
-    elsif (b[arr[0]] == "O" && b[arr[1]] == "O" && b[arr[2]] == "O")
-      puts "Computer Wins!"
-      return true
-    else
-      return false
-    end
+def check_for_winner(board)
+  winning_lines = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
+  winning_lines.each do |line|
+    return "Player" if board.values_at(*line).count('X') == 3
+    return "Computer" if board.values_at(*line).count('O') == 3
   end
+  nil
+end
+
+def board_filled?(b)
+  empty_spaces(b) == []
+end
+
+def announce_winner(winner)
+  puts "#{winner} Wins!"
 end
 
 loop do
@@ -57,8 +61,14 @@ loop do
     get_player_choice(board)
     get_computer_choice(board)
     print_board(board)
-    binding.pry
-  end until check_for_winner(board)
+    winner = check_for_winner(board)
+  end until check_for_winner(board) || board_filled?(board)
+
+  if winner
+    announce_winner(winner)
+  else
+    puts "It's a tie!"
+  end
   
   puts "Would you like to play again?(Y/N):"
   play_again = gets.chomp.downcase
@@ -67,6 +77,7 @@ loop do
     break
   end
 end
+
 
 
 
