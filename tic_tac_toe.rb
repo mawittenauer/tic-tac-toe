@@ -5,35 +5,35 @@ puts "Let's play Tic Tac Toe!"
 # 2. Take guesses for player and computer in a loop
 # 3. End game when there is a tie or someone wins
 
-def print_board(b)
+def print_board(board)
   system 'clear'
-  puts " #{b[1]} | #{b[2]} | #{b[3]} "
+  puts " #{board[1]} | #{board[2]} | #{board[3]} "
   puts "-----------"
-  puts " #{b[4]} | #{b[5]} | #{b[6]} "
+  puts " #{board[4]} | #{board[5]} | #{board[6]} "
   puts "-----------"
-  puts " #{b[7]} | #{b[8]} | #{b[9]} "
+  puts " #{board[7]} | #{board[8]} | #{board[9]} "
 end
 
 def make_board
-  b = {}
-  (1..9).each { |number| b[number] = ' ' }
-  b
+  board = {}
+  (1..9).each { |number| board[number] = ' ' }
+  board
 end
 
-def get_player_choice(b)
+def get_player_choice(board)
   begin
     puts "Select a position (1 - 9):"
     selection = gets.chomp.to_i
-  end until empty_spaces(b).include?(selection)
-  b[selection] = 'X'
+  end until empty_spaces(board).include?(selection)
+board[selection] = 'X'
 end
 
-def empty_spaces(b)
-  b.select { |key, value| value == ' ' }.keys
+def empty_spaces(board)
+  board.select { | _ , value| value == ' ' }.keys
 end
 
-def get_computer_choice(b)
-  b[empty_spaces(b).sample] = 'O'
+def get_computer_choice(board)
+  board[empty_spaces(board).sample] = 'O'
 end
 
 def check_for_winner(board)
@@ -45,8 +45,8 @@ def check_for_winner(board)
   nil
 end
 
-def board_filled?(b)
-  empty_spaces(b) == []
+def board_filled?(board)
+  empty_spaces(board) == []
 end
 
 def announce_winner(winner)
