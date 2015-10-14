@@ -30,14 +30,15 @@ class Board
   end
   
   def mark_square(position, marker)
-    self.data[position].mark(marker)
+    data[position].mark(marker)
   end
   
   def winning_condition?(marker)
-    WINNING_LINES.each do |line|
-      return true if @data[line[0]].marker == marker && @data[line[1]].marker == marker && @data[line[2]].marker == marker 
+    WINNING_LINES.any? do |line|
+      @data[line[0]].marker == marker && 
+      @data[line[1]].marker == marker && 
+      @data[line[2]].marker == marker 
     end
-    return false
   end
 end
 
@@ -107,10 +108,9 @@ class Game
       @board.print
       player_choice
       @board.print
-      switch_player
       
-      if @board.full?
-        puts "It's a tie!"
+      if @board.winning_condition?(@current_player.marker)
+        puts "#{@current_player.name} Wins!"
         if play_again?
           @board.clear
         else
@@ -118,8 +118,10 @@ class Game
         end
       end
       
-      if @board.winning_condition?(@current_player.marker)
-        puts "#{@current_player.name} Wins!"
+      switch_player
+      
+      if @board.full?
+        puts "It's a tie!"
         if play_again?
           @board.clear
         else
